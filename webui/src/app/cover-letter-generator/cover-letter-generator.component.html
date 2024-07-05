@@ -1,0 +1,51 @@
+<div class="container-fluid h-100 d-flex flex-column">
+  <form [formGroup]="coverLetterForm">
+    <div class="row mb-3">
+      <div class="col-12 d-flex justify-content-start">
+        <button class="btn btn-secondary" (click)="goBack()">Back</button>
+      </div>
+    </div>
+    <div class="row flex-grow-1">
+      <div class="col-lg-6  my-2 border border-secondary p-3 d-flex flex-column" id="applicant-resume">
+        <h2>Applicant Resume</h2>
+        <select     
+        formControlName="selectedResume"
+        class="form-select bg-dark text-light border border-secondary">
+          <option>
+
+          </option>
+          <option *ngFor="let resume of resumes" [ngValue]="resume" >
+            {{resume?.targetRole}}
+          </option>
+        </select>
+        <textarea class="form-control flex-grow-1 mt-2" formControlName="resume" rows="15"></textarea>
+      </div>
+      <div class="col-lg-6 my-2 border border-secondary p-3 d-flex flex-column" id="job-description">
+        <h2>Job Description</h2>
+        <textarea class="form-control flex-grow-1 mt-2" formControlName="jobDescription" rows="15"></textarea>
+      </div>
+    </div>
+    <div class="row flex-grow-1">
+      <div class="col-12 border border-secondary p-3 d-flex flex-column" id="cover-letter">
+        <h2>Cover Letter</h2>
+        <textarea class="form-control flex-grow-1 mt-2" formControlName="output" rows="15"></textarea>
+      </div>
+    </div>
+    <div class="row mt-3 justify-content-center">
+      <div class="col-8 text-center">
+        <button *ngIf="!isLoading" class="btn btn-outline-primary w-100" (click)="generateCoverLetter()">Generate Cover Letter</button>
+        <div class="my-1"></div>
+        <button *ngIf="!isLoading && output?.value.length > 0" class="btn btn-outline-success w-100" (click)="downloadPdf()">Download Letter PDF</button>
+        <span *ngIf="!isLoading && errorState" 
+          class="text-danger w-100" 
+          (click)="generateCoverLetter()">Error Generating Letter try again
+      </span>
+        <div *ngIf="isLoading" class="d-flex justify-content-center">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>

@@ -124,9 +124,7 @@ export class ReplicateClient {
         ).json()) as Prediction;
 
         if (newPrediction.id) {
-            const predictionReady = await this.pollPredictionComplete(
-                newPrediction.id
-            );
+            const predictionReady = await this.pollPredictionComplete(newPrediction.id);
             if (predictionReady) {
                 const finalPrediction = await this.getPredictionBase(newPrediction.id);
                 console.log(finalPrediction);
@@ -141,7 +139,7 @@ export class ReplicateClient {
                 return emptyResponse;
             }
         } else {
-            throw new Error("asdsad");
+            throw new Error("Prediction Generation failed");
         }
     }
 

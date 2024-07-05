@@ -1,0 +1,45 @@
+
+
+
+  .ball {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: red;
+    position: absolute;
+    animation: bounce 2s infinite;
+  }
+  
+  @keyframes bounce {
+    0% {
+      top: 0;
+    }
+    50% {
+      top: -20px;
+    }
+    100% {
+      top: 0;
+    }
+  }
+
+  /* achievements.component.css */
+.achievement-pill {
+  background: linear-gradient(135deg, #ebebeb, #c2b0b0);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+  color: #333;
+  
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  color: #ff0000;
+}

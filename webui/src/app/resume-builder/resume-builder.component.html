@@ -1,0 +1,277 @@
+<fa-icon [icon]="faCoffee" size="2x" />
+
+<form [formGroup]="resumeForm" style="background: linear-gradient(135deg, #1a1a1a, #2b2b2b);">
+  <form [formGroup]="resumeSelectForm">
+    <div class="container py-5">
+      <div class="form-group mb-3">
+        <label for="firstName" class="form-label text-light">Existing Resume</label>
+        <select 
+          type="text"
+          formControlName="selectedResume"
+          class="form-select bg-dark text-light border-secondary my-2">
+              <option value=""></option>
+
+              <option *ngFor="let resume of resumes" [ngValue]="resume">
+                {{resume.targetRole}} 
+              </option>
+        </select>
+        <button class="btn btn-outline-danger w-100" *ngIf="resumeSelectForm.get('selectedResume')?.value?.id != null"
+        (click)="dropResume()">Delete Saved Resume</button>
+        <div class="py-1"></div>
+        <button class="btn btn-outline-warning w-100" *ngIf="resumeSelectForm.get('selectedResume')?.value?.id != null"
+        (click)="cloneResume()">Clone Saved Resume To New</button>
+      </div>
+    </div>
+  </form>
+  <div class="container py-5">
+
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-sm bg-dark text-light">
+          <div class="card-body p-4">
+            <h5 class="card-title text-uppercase text-light">Resume Generator</h5>
+            <hr class="my-2 bg-light">
+            <div class="row">
+              <div formGroupName="contact">
+                <h6 class="card-subtitle mb-2 py-1 text-white">Contact:</h6>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label for="firstName" class="form-label text-light">First Name:</label>
+                      <input formControlName="firstName" type="text"
+                        class="form-control bg-dark text-light border-secondary">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label for="lastName" class="form-label text-light">Last Name:</label>
+                      <input formControlName="lastName" type="text"
+                        class="form-control bg-dark text-light border-secondary">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label for="email" class="form-label text-light">Email:</label>
+                      <input formControlName="email" type="email" class="form-control bg-dark text-light border-secondary">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label for="phone" class="form-label text-light">Phone:</label>
+                      <input formControlName="phone" type="tel" class="form-control bg-dark text-light border-secondary">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group mb-3">
+                  <label for="targetRole" class="form-label text-light">Target Role:</label>
+                  <input formControlName="targetRole" type="text" class="form-control bg-dark text-light border-secondary">
+                </div>
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <label for="headerStatement" class="form-label text-light">Header Statement:</label>
+              <textarea formControlName="headerStatement"
+                class="form-control bg-dark text-light border-secondary"></textarea>
+            </div>
+            <hr class="bg-white">
+            <div class="mt-4">
+              <h6 class="card-subtitle mb-2 py-1 text-white">Work History:</h6>
+              <div formArrayName="workHistory">
+                <div *ngFor="let work of workHistory.controls; let i = index">
+                  <div [formGroupName]="i">
+                    <div class="row">
+                      <div class="col-12 text-end my-3">
+                        <button (click)="removeWorkHistory(i)" class="btn btn-sm btn-outline-danger py-2">Remove Work
+                          History</button>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group mb-3">
+                          <label for="startDate" class="form-label text-light">Start Date:</label>
+                          <input formControlName="startDate" type="date"
+                            class="form-control bg-dark text-light border-secondary">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group mb-3">
+                          <label for="endDate" class="form-label text-light">End Date:</label>
+                          <input formControlName="endDate" type="date"
+                            class="form-control bg-dark text-light border-secondary">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group mb-3">
+                          <label for="jobTitle" class="form-label text-light">Job Title:</label>
+                          <input formControlName="jobTitle" type="text"
+                            class="form-control bg-dark text-light border-secondary">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group mb-3">
+                          <label for="companyName" class="form-label text-light">Company Name:</label>
+                          <input formControlName="companyName" type="text"
+                            class="form-control bg-dark text-light border-secondary">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group mb-3">
+                      <label for="summary" class="form-label text-light">Summary:</label>
+                      <textarea formControlName="summary"
+                        class="form-control bg-dark text-light border-secondary"></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                      <!-- achievements.component.html -->
+                      <div class="form-group mb-3">
+                        <label for="achievements" class="form-label text-light">Achievements: 
+                          <span style="cursor:pointer;" (click)="collapseWorkHist()">
+                            <small *ngIf="showWorkHistAc">- collapse</small>
+                            <small *ngIf="!showWorkHistAc">+ expand</small>
+                          </span>
+                          </label>
+                          <ng-container *ngIf="showWorkHistAc">
+                            <div *ngFor="let achievement of work.get('achievements')?.value; let j = index" >
+                              <div class="col-12 text-end py-2">   
+                                <button class="btn btn-outline-danger py-1" (click)="removeWorkHistoryAchievement(i,j)">Delete</button>
+                              </div>
+                              <div style="height: fit-content;resize: none;" class="achievement-pill"
+                                (input)="saveAcState(i,j,$event)"
+                                [attr.contenteditable]="true ? true : null">
+                              {{ achievement?.trim() }}
+                            </div>
+                            </div>
+                          </ng-container>
+                      </div>
+                        <form [formGroup]="resumeForm">
+                          <div class="input-group mb-3 col-12">
+                            <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="currentWorkAc"
+                            placeholder="Add achievement">
+                          <button class="btn btn-outline-primary" type="button" (click)="addWorkHistoryAc(i)" >Add</button>
+                     
+                      </div>  
+                      </form>
+
+                    </div>
+                  </div>
+                </div>
+                <button (click)="addWorkHistory()" class="btn btn-sm btn-outline-primary">Add Work History</button>
+              </div>
+              
+            </div>
+            <hr class="bg-white">
+            <div class="mt-4">
+              <h6 class="card-subtitle mb-2 py-1 text-white">Education History:</h6>
+              <div formArrayName="educationHistory">
+                <div *ngFor="let education of educationHistory.controls; let i = index">
+                  <div [formGroupName]="i">
+                    <div class="row">
+                      <div class="col-12 text-end">
+                        <button (click)="removeEducationHistory(i)" class="btn btn-sm btn-outline-danger"> x Remove
+                          Education</button>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group mb-3">
+                          <label for="startDate" class="form-label text-light">Start Date:</label>
+                          <input formControlName="startDate" type="date"
+                            class="form-control bg-dark text-light border-secondary">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group mb-3">
+                          <label for="endDate" class="form-label text-light">End Date:</label>
+                          <input formControlName="endDate" type="date"
+                            class="form-control bg-dark text-light border-secondary">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group mb-3">
+                          <label for="schoolName" class="form-label text-light">School Name:</label>
+                          <input formControlName="schoolName" type="text"
+                            class="form-control bg-dark text-light border-secondary">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group mb-3">
+                          <label for="degree" class="form-label text-light">Degree:</label>
+                          <input formControlName="degree" type="text"
+                            class="form-control bg-dark text-light border-secondary">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group mb-3">
+                      <label for="achievements" class="form-label text-light">Achievements:</label>
+                      <input formControlName="achievements" type="text"
+                        class="form-control bg-dark text-light border-secondary">
+                    </div>
+                  </div>
+                </div>
+                <button (click)="addEducationHistory()" class="btn btn-sm btn-outline-primary">Add Education
+                  History</button>
+              </div>
+            </div>
+            <hr class="bg-white">
+            <div class="my-4">
+              <h6 class="card-subtitle mb-2 py-1 text-white">Skill Set:</h6>
+              <div formArrayName="skills">
+                <div *ngFor="let skillSet of skills.controls; let i = index" class="my-2">
+                  <div [formGroupName]="i">
+                    <div class="row">
+                      <div class="col-12 text-end">
+                        <button (click)="removeSkill(i)" class="btn btn-sm btn-outline-danger">Remove
+                          Skill</button>
+                      </div>
+                      <div class="col-md-6 col-sm-12 col-lg-12">
+                        <div class="form-group mb-3">
+                          <label for="skillSetName" class="form-label text-light col-md-4">Skill Set Name:</label>
+                          <input formControlName="skillSetName" type="text"
+                            class="form-control bg-dark text-light border-secondary col-md-4">
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-sm-12 col-lg-12">
+                        <div class="form-group mb-3">
+                          <label for="skills" class="form-label text-light">Skills:</label>
+                          <div class="col-6 mb-1">
+                            <div class="input-group" [formGroup]="resumeForm">
+                              <input 
+                              formControlName="currentSkillSetSkill"
+                              class="form-control bg-dark text-light border-secondary mt-2" type="text">
+                              <button 
+                              class="btn btn-outline-primary mt-2" 
+                              (click)="addSkillSetSkill(i)">Add Skill</button>
+                            </div>
+                          </div>
+                          <div class="ps-4" *ngFor="let skill of skillSet.get('skills')?.value; let j = index" > 
+                            <div class="row my-2">
+                              <div class="col-8 my-1">
+                                <span>{{skill}}</span>
+                              </div>
+                              <div class="col-4 text-start ">
+                                <button class="btn btn-outline-danger" (click)="removeSkillSetSkill(i,j)">X</button>
+                              </div> 
+                            </div>
+                          </div>
+                          <!-- <input formControlName="skills" type="text"
+                            class="form-control bg-dark text-light border-secondary"> -->
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                <button (click)="addSkill()" class="btn btn-sm btn-outline-primary">Add Skill Set</button>
+              </div>
+            </div>
+            <button (click)="save()" class="mt-4 btn btn-success w-100">Save Resume</button>
+            <button (click)="pdf()" class="mt-4 btn btn-primary w-100">Generate Resume PDF</button>
+            <div class="mt-4">
+              <button class="btn btn-secondary w-100"  [routerLink]="['../cover-letter-generator']" routerLinkActive="router-link-active">Cover Letter
+                Generator</button>
+            </div>
+
+          </div>
